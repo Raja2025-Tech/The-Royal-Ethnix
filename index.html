@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Royal Ethnix - Attendance Kiosk</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f4f9; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container { 
+            background: white; 
+            padding: 30px 40px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 { color: #222; margin-bottom: 5px; }
+        h2 { color: #666; font-size: 16px; margin-top: 0; font-weight: normal; }
+        select, button { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 15px; 
+            font-size: 16px; 
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button { 
+            background-color: #d4af37; /* Royal Gold */
+            color: #111; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover { background-color: #b5952f; }
+        #status { 
+            margin-top: 20px; 
+            font-size: 14px; 
+            color: #888; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>The Royal Ethnix</h1>
+    <h2>Staff Biometric Portal</h2>
+    
+    <select id="shiftDropdown">
+        <option value="">Loading shifts from database...</option>
+    </select>
+    
+    <button onclick="startFaceScan()">Start Face Scan</button>
+    
+    <div id="status">Connecting to local server...</div>
+</div>
+
+<script>
+    // Fetch shifts directly from your XAMPP local API
+    fetch('http://localhost/royal_ethnix_api/get_shifts.php')
+        .then(response => response.json())
+        .then(data => {
+            const dropdown = document.getElementById('shiftDropdown');
+            const status = document.getElementById('status');
+            
+            // Clear the initial loading text
+            dropdown.innerHTML = '<option value="">-- Select Your Shift --</option>';
+            
+            if (data.status === 'success') {
+                // Loop through the data and create dropdown options
+                data.data.forEach(shift => {
+                    const option = document.createElement('option');
+                    option.value = shift.id;
+                    option.textContent = `${shift.shift_name} (${shift.start_time} - ${shift.end_time})`;
+                    dropdown.appendChild(option);
+                });
+                status.innerHTML = '🟢 Connected to API successfully';
+                status.style.color = "green";
+            } else {
+                status.textContent = "API Error: " + data.message;
+                status.style.color = "red";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('status').innerHTML = "🔴 Failed to connect. Is XAMPP Apache running?";
+            document.getElementById('status').style.color = "red";
+        });
+
+    function startFaceScan() {
+        const shiftId = document.getElementById('shiftDropdown').value;
+        if(!shiftId) {
+            alert("Please select your shift before scanning.");
+            return;
+        }
+        alert("Connecting to camera for Shift ID: " + shiftId + "...\n(This is where the face biometric integration will happen)");
+    }
+</script>
+
+</body>
+</html>
