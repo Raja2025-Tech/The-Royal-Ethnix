@@ -59,8 +59,9 @@
             const data = await response.json();
 
             if (data.status === 'success') {
-                alert("Registration successful! Proceeding to login.");
-                window.location.href = 'login.html';
+    alert(data.message); // This will now show the exact PHPMailer error
+    switchView('verify-section');
+}
             } else {
                 alert(data.message);
             }
