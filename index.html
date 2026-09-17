@@ -226,8 +226,13 @@
 
     // --- BIOMETRIC & API LOGIC ---
     function fetchShifts() {
-        fetch('http://localhost/royal_ethnix_api/get_shifts.php')
-            .then(response => response.json())
+        fetch('https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/get_shifts.php', {
+            headers: {
+                'ngrok-skip-browser-warning': '1'
+            }
+        })
+        .then(response => response.json())
+        // ... (keep the rest of your fetchShifts code exactly the same)
             .then(data => {
                 const dropdown = document.getElementById('shiftDropdown');
                 const status = document.getElementById('status');
