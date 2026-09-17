@@ -25,12 +25,9 @@
             width: 100%;
             max-width: 400px;
         }
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
         h1 { color: #222; margin-bottom: 5px; }
         h2 { color: #666; font-size: 16px; margin-top: 0; font-weight: normal; margin-bottom: 20px; }
-        
         input, select, button { 
             width: 100%; 
             padding: 12px; 
@@ -40,12 +37,9 @@
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #d4af37;
-        }
+        input:focus, select:focus { outline: none; border-color: #d4af37; }
         button { 
-            background-color: #d4af37; /* Royal Gold */
+            background-color: #d4af37; 
             color: #111; 
             border: none; 
             cursor: pointer; 
@@ -53,15 +47,8 @@
             transition: background-color 0.3s;
         }
         button:hover { background-color: #b5952f; }
-        button.secondary {
-            background-color: #eee;
-            color: #333;
-            margin-top: 10px;
-        }
-        button.secondary:hover {
-            background-color: #ddd;
-        }
-        
+        button.secondary { background-color: #eee; color: #333; margin-top: 10px; }
+        button.secondary:hover { background-color: #ddd; }
         .toggle-link {
             margin-top: 20px;
             display: block;
@@ -70,16 +57,8 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .toggle-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        #status { 
-            margin-top: 20px; 
-            font-size: 14px; 
-            color: #888; 
-        }
+        .toggle-link:hover { color: #d4af37; text-decoration: underline; }
+        #status { margin-top: 20px; font-size: 14px; color: #888; }
         #webcam {
             display: none; 
             width: 100%;
@@ -96,9 +75,68 @@
     <div id="login-section" class="container">
         <h1>The Royal Ethnix</h1>
         <h2>Staff Login</h2>
+        <form onsubmit="handleLogin(event)">
+            <input type="text" id="loginId" placeholder="Email or Phone Number" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <span class="toggle-link" onclick="switchView('signup-section')">Don't have an account? Sign Up</span>
+    </div>
+
+    <!-- SIGNUP SECTION -->
+    <div id="signup-section" class="container hidden">
+        <h1>The Royal Ethnix</h1>
+        <h2>Register New Staff</h2>
+        <form onsubmit="handleSignup(event)">
+            <input type="text" id="signupName" placeholder="Full Name" required>
+            <input type="email" id="signupEmail" placeholder="Email Address" required>
+            <input type="tel" id="signupPhone" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+            <input type="password" id="signupPassword" placeholder="Create Password" required>
+            <button type="submit">Sign Up & Send OTP</button>
+        </form>
+        <span class="toggle-link" onclick="switchView('login-section')">Already have an account? Login</span>
+    </div>
+
+    <!-- VERIFICATION SECTION -->
+    <div id="verify-section" class="container hidden">
+        <h1>Verify Account</h1>
+        <h2>Enter the OTP sent to your email/phone</h2>
+        <form onsubmit="handleVerify(event)">
+            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" pattern="[0-9]{6}" required>
+            <button type="submit">Verify & Continue</button>
+            <button type="button" class="secondary" onclick="switchView('signup-section')">Go Back</button>
+        </form>
+    </div>
+
+    <!-- DASHBOARD / BIOMETRIC SECTION -->
+    <div id="dashboard-section" class="container hidden">
+        <h1>The Royal Ethnix</h1>
+        <h2>Staff Biometric Portal</h2>
+        <select id="shiftDropdown">
+            <option value="">Loading shifts from database...</option>
+        </select>
+        <button onclick="startFaceScan()">Start Face Scan</button>
+        <video id="webcam" autoplay playsinline muted></video>
+        <div id="status">Connecting to local server...</div>
+        <button class="secondary" onclick="logout()">Logout</button>
+    </div>
+
+<script>
+    // --- UI NAVIGATION LOGIC ---
+    function switchView(viewId) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('signup-section').classList.add('hidden');
+        document.getElementById('verify-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.add('hidden');
         
-        // --- AUTHENTICATION LOGIC (Live API Integration) ---
-    
+        document.getElementById(viewId).classList.remove('hidden');
+
+        if(viewId === 'dashboard-section') {
+            fetchShifts();
+        }
+    }
+
+    // --- AUTHENTICATION LOGIC (Live API Integration) ---
     async function handleLogin(event) {
         event.preventDefault();
         
@@ -119,25 +157,19 @@
             const data = await response.json();
 
             if (data.status === 'success') {
-                // Store user session data if needed
                 localStorage.setItem('user', JSON.stringify(data.user));
                 switchView('dashboard-section');
             } else {
-                alert(data.message); // E.g., "Invalid email/phone or password"
+                alert(data.message); 
             }
         } catch (error) {
             console.error('Login Error:', error);
-            alert("Failed to connect to the authentication server.");
+            alert("Failed to connect to the authentication server. Ensure XAMPP is running.");
         } finally {
             submitBtn.textContent = "Login";
             submitBtn.disabled = false;
         }
-    
-        <!-- SIGNUP SECTION -->
-    <div id="signup-section" class="container hidden">
-        <h1>The Royal Ethnix</h1>
-        <h2>Register New Staff</h2>
-        
+    }
 
     async function handleSignup(event) {
         event.preventDefault();
@@ -164,84 +196,31 @@
                 alert("Registration successful! (Proceeding to OTP verification)");
                 switchView('verify-section');
             } else {
-                alert(data.message); // E.g., "Email or Phone number already exists"
+                alert(data.message);
             }
         } catch (error) {
             console.error('Signup Error:', error);
-            alert("Failed to connect to the registration server.");
+            alert("Failed to connect to the registration server. Ensure XAMPP is running.");
         } finally {
             submitBtn.textContent = "Sign Up & Send OTP";
             submitBtn.disabled = false;
         }
-    }    
-       
-    <!-- DASHBOARD / BIOMETRIC SECTION -->
-    <div id="dashboard-section" class="container hidden">
-        <h1>The Royal Ethnix</h1>
-        <h2>Staff Biometric Portal</h2>
-        
-        <select id="shiftDropdown">
-            <option value="">Loading shifts from database...</option>
-        </select>
-        
-        <button onclick="startFaceScan()">Start Face Scan</button>
-        
-        <video id="webcam" autoplay playsinline muted></video>
-        
-        <div id="status">Connecting to local server...</div>
-
-        <button class="secondary" onclick="logout()">Logout</button>
-    </div>
-
-<script>
-    // --- UI NAVIGATION LOGIC ---
-    function switchView(viewId) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('signup-section').classList.add('hidden');
-        document.getElementById('verify-section').classList.add('hidden');
-        document.getElementById('dashboard-section').classList.add('hidden');
-        
-        document.getElementById(viewId).classList.remove('hidden');
-
-        // If switching to dashboard, fetch shifts
-        if(viewId === 'dashboard-section') {
-            fetchShifts();
-        }
-    }
-
-    // --- AUTHENTICATION LOGIC (Frontend Simulation) ---
-    function handleLogin(event) {
-        event.preventDefault();
-        // Here you will eventually add an AJAX fetch() call to your PHP backend to verify credentials
-        // For now, we simulate a successful login and go to the dashboard
-        switchView('dashboard-section');
-    }
-
-    function handleSignup(event) {
-        event.preventDefault();
-        // Here you will eventually send the user data to PHP to save in the database and trigger an OTP SMS/Email
-        // For now, we simulate moving to the verification step
-        switchView('verify-section');
     }
 
     function handleVerify(event) {
         event.preventDefault();
-        // Here you will verify the OTP against your PHP backend
-        // For now, we simulate a successful verification and go to the dashboard
         alert("Verification Successful!");
         switchView('dashboard-section');
     }
 
     function logout() {
-        // Stop the webcam if it's running
         const video = document.getElementById('webcam');
         if (video.srcObject) {
             video.srcObject.getTracks().forEach(track => track.stop());
             video.style.display = "none";
         }
         document.getElementById('status').textContent = "";
-        
-        // Go back to login
+        localStorage.removeItem('user');
         switchView('login-section');
     }
 
@@ -252,7 +231,6 @@
             .then(data => {
                 const dropdown = document.getElementById('shiftDropdown');
                 const status = document.getElementById('status');
-                
                 dropdown.innerHTML = '<option value="">-- Select Your Shift --</option>';
                 
                 if (data.status === 'success') {
