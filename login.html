@@ -31,9 +31,7 @@
     </div>
 
 <script>
-    // NOTE: To fix the GitHub Pages HTTPS -> HTTP mixed content block, 
-    // replace this URL with an ngrok HTTPS tunnel URL later.
-    const API_URL = 'http://localhost/royal_ethnix_api/login.php';
+    const API_URL = 'https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/login.php';
 
     async function handleLogin(event) {
         event.preventDefault();
@@ -48,7 +46,10 @@
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': '1' // Bypasses the ngrok free tier warning screen
+                },
                 body: JSON.stringify({ loginId, password })
             });
 
@@ -56,13 +57,13 @@
 
             if (data.status === 'success') {
                 localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.href = 'index.html'; // Redirect to dashboard
+                window.location.href = 'index.html'; 
             } else {
                 alert(data.message); 
             }
         } catch (error) {
             console.error('Login Error:', error);
-            alert("Failed to connect to the local XAMPP server. Browser security may be blocking the HTTP request from HTTPS GitHub Pages.");
+            alert("Failed to connect to the server.");
         } finally {
             submitBtn.textContent = "Login";
             submitBtn.disabled = false;
