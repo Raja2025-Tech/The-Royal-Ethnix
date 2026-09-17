@@ -3,228 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Royal Ethnix - Staff Portal</title>
+    <title>Dashboard - The Royal Ethnix</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f4f9; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container { 
-            background: white; 
-            padding: 30px 40px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-        }
-        .hidden { display: none !important; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: white; padding: 30px 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 500px; }
         h1 { color: #222; margin-bottom: 5px; }
         h2 { color: #666; font-size: 16px; margin-top: 0; font-weight: normal; margin-bottom: 20px; }
-        input, select, button { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 15px; 
-            font-size: 16px; 
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        input:focus, select:focus { outline: none; border-color: #d4af37; }
-        button { 
-            background-color: #d4af37; 
-            color: #111; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
+        .user-greeting { margin-bottom: 20px; font-weight: bold; color: #d4af37; }
+        select, button { width: 100%; padding: 12px; margin-top: 15px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        select:focus { outline: none; border-color: #d4af37; }
+        button { background-color: #d4af37; color: #111; border: none; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         button:hover { background-color: #b5952f; }
         button.secondary { background-color: #eee; color: #333; margin-top: 10px; }
         button.secondary:hover { background-color: #ddd; }
-        .toggle-link {
-            margin-top: 20px;
-            display: block;
-            font-size: 14px;
-            color: #555;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .toggle-link:hover { color: #d4af37; text-decoration: underline; }
         #status { margin-top: 20px; font-size: 14px; color: #888; }
-        #webcam {
-            display: none; 
-            width: 100%;
-            border-radius: 5px; 
-            margin-top: 15px; 
-            border: 1px solid #ccc;
-            background-color: #000;
-        }
+        #webcam { display: none; width: 100%; border-radius: 5px; margin-top: 15px; border: 1px solid #ccc; background-color: #000; }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN SECTION -->
-    <div id="login-section" class="container">
-        <h1>The Royal Ethnix</h1>
-        <h2>Staff Login</h2>
-        <form onsubmit="handleLogin(event)">
-            <input type="text" id="loginId" placeholder="Email or Phone Number" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <span class="toggle-link" onclick="switchView('signup-section')">Don't have an account? Sign Up</span>
-    </div>
-
-    <!-- SIGNUP SECTION -->
-    <div id="signup-section" class="container hidden">
-        <h1>The Royal Ethnix</h1>
-        <h2>Register New Staff</h2>
-        <form onsubmit="handleSignup(event)">
-            <input type="text" id="signupName" placeholder="Full Name" required>
-            <input type="email" id="signupEmail" placeholder="Email Address" required>
-            <input type="tel" id="signupPhone" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
-            <input type="password" id="signupPassword" placeholder="Create Password" required>
-            <button type="submit">Sign Up & Send OTP</button>
-        </form>
-        <span class="toggle-link" onclick="switchView('login-section')">Already have an account? Login</span>
-    </div>
-
-    <!-- VERIFICATION SECTION -->
-    <div id="verify-section" class="container hidden">
-        <h1>Verify Account</h1>
-        <h2>Enter the OTP sent to your email/phone</h2>
-        <form onsubmit="handleVerify(event)">
-            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" pattern="[0-9]{6}" required>
-            <button type="submit">Verify & Continue</button>
-            <button type="button" class="secondary" onclick="switchView('signup-section')">Go Back</button>
-        </form>
-    </div>
-
-    <!-- DASHBOARD / BIOMETRIC SECTION -->
-    <div id="dashboard-section" class="container hidden">
+    <div class="container">
         <h1>The Royal Ethnix</h1>
         <h2>Staff Biometric Portal</h2>
+        
+        <div id="greeting" class="user-greeting">Loading...</div>
+        
         <select id="shiftDropdown">
             <option value="">Loading shifts from database...</option>
         </select>
+        
         <button onclick="startFaceScan()">Start Face Scan</button>
+        
         <video id="webcam" autoplay playsinline muted></video>
-        <div id="status">Connecting to local server...</div>
+        
+        <div id="status">Connecting to database...</div>
+
         <button class="secondary" onclick="logout()">Logout</button>
     </div>
 
 <script>
-    // --- UI NAVIGATION LOGIC ---
-    function switchView(viewId) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('signup-section').classList.add('hidden');
-        document.getElementById('verify-section').classList.add('hidden');
-        document.getElementById('dashboard-section').classList.add('hidden');
-        
-        document.getElementById(viewId).classList.remove('hidden');
-
-        if(viewId === 'dashboard-section') {
-            fetchShifts();
-        }
+    // Security check: Redirect to login if user data doesn't exist
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+        window.location.href = 'login.html';
+    } else {
+        const user = JSON.parse(userJson);
+        document.getElementById('greeting').textContent = `Welcome, ${user.name} (${user.employee_code})`;
+        fetchShifts();
     }
 
-    // --- AUTHENTICATION LOGIC (Live API Integration) ---
-    async function handleLogin(event) {
-        event.preventDefault();
-        
-        const loginId = document.getElementById('loginId').value;
-        const password = document.getElementById('loginPassword').value;
-        const submitBtn = event.target.querySelector('button');
-        
-        submitBtn.textContent = "Logging in...";
-        submitBtn.disabled = true;
-
-        try {
-            const response = await fetch('http://localhost/royal_ethnix_api/login.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ loginId, password })
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                localStorage.setItem('user', JSON.stringify(data.user));
-                switchView('dashboard-section');
-            } else {
-                alert(data.message); 
-            }
-        } catch (error) {
-            console.error('Login Error:', error);
-            alert("Failed to connect to the authentication server. Ensure XAMPP is running.");
-        } finally {
-            submitBtn.textContent = "Login";
-            submitBtn.disabled = false;
-        }
-    }
-
-    async function handleSignup(event) {
-        event.preventDefault();
-        
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const phone = document.getElementById('signupPhone').value;
-        const password = document.getElementById('signupPassword').value;
-        const submitBtn = event.target.querySelector('button');
-
-        submitBtn.textContent = "Processing...";
-        submitBtn.disabled = true;
-
-        try {
-            const response = await fetch('http://localhost/royal_ethnix_api/signup.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, phone, password })
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                alert("Registration successful! (Proceeding to OTP verification)");
-                switchView('verify-section');
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error('Signup Error:', error);
-            alert("Failed to connect to the registration server. Ensure XAMPP is running.");
-        } finally {
-            submitBtn.textContent = "Sign Up & Send OTP";
-            submitBtn.disabled = false;
-        }
-    }
-
-    function handleVerify(event) {
-        event.preventDefault();
-        alert("Verification Successful!");
-        switchView('dashboard-section');
-    }
-
-    function logout() {
-        const video = document.getElementById('webcam');
-        if (video.srcObject) {
-            video.srcObject.getTracks().forEach(track => track.stop());
-            video.style.display = "none";
-        }
-        document.getElementById('status').textContent = "";
-        localStorage.removeItem('user');
-        switchView('login-section');
-    }
-
-    // --- BIOMETRIC & API LOGIC ---
     function fetchShifts() {
         fetch('https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/get_shifts.php', {
             headers: {
@@ -232,31 +59,31 @@
             }
         })
         .then(response => response.json())
-        // ... (keep the rest of your fetchShifts code exactly the same)
-            .then(data => {
-                const dropdown = document.getElementById('shiftDropdown');
-                const status = document.getElementById('status');
-                dropdown.innerHTML = '<option value="">-- Select Your Shift --</option>';
-                
-                if (data.status === 'success') {
-                    data.data.forEach(shift => {
-                        const option = document.createElement('option');
-                        option.value = shift.id;
-                        option.textContent = `${shift.shift_name} (${shift.start_time} - ${shift.end_time})`;
-                        dropdown.appendChild(option);
-                    });
-                    status.innerHTML = '🟢 Connected to API successfully';
-                    status.style.color = "green";
-                } else {
-                    status.textContent = "API Error: " + data.message;
-                    status.style.color = "red";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('status').innerHTML = "🔴 Failed to connect to server.";
-                document.getElementById('status').style.color = "red";
-            });
+        .then(data => {
+            const dropdown = document.getElementById('shiftDropdown');
+            const status = document.getElementById('status');
+            
+            dropdown.innerHTML = '<option value="">-- Select Your Shift --</option>';
+            
+            if (data.status === 'success') {
+                data.data.forEach(shift => {
+                    const option = document.createElement('option');
+                    option.value = shift.id;
+                    option.textContent = `${shift.shift_name} (${shift.start_time} - ${shift.end_time})`;
+                    dropdown.appendChild(option);
+                });
+                status.innerHTML = '🟢 Connected to API successfully';
+                status.style.color = "green";
+            } else {
+                status.textContent = "API Error: " + data.message;
+                status.style.color = "red";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('status').innerHTML = "🔴 Failed to connect to server.";
+            document.getElementById('status').style.color = "red";
+        });
     }
 
     function startFaceScan() {
@@ -285,6 +112,15 @@
                 status.style.color = "red";
                 video.style.display = "none";
             });
+    }
+
+    function logout() {
+        const video = document.getElementById('webcam');
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
     }
 </script>
 
