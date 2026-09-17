@@ -33,7 +33,7 @@
     </div>
 
 <script>
-    const API_URL = 'http://localhost/royal_ethnix_api/signup.php';
+    const API_URL = 'https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/signup.php';
 
     async function handleSignup(event) {
         event.preventDefault();
@@ -50,7 +50,10 @@
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': '1' // Bypasses the ngrok free tier warning screen
+                },
                 body: JSON.stringify({ name, email, phone, password })
             });
 
@@ -64,7 +67,7 @@
             }
         } catch (error) {
             console.error('Signup Error:', error);
-            alert("Failed to connect to the local XAMPP server. Browser security may be blocking the HTTP request from HTTPS GitHub Pages.");
+            alert("Failed to connect to the server.");
         } finally {
             submitBtn.textContent = "Sign Up";
             submitBtn.disabled = false;
