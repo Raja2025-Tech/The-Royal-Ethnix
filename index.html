@@ -35,7 +35,7 @@
             box-sizing: border-box;
         }
         button { 
-            background-color: #d4af37; /* Royal Gold */
+            background-color: #d4af37;
             color: #111; 
             border: none; 
             cursor: pointer; 
@@ -47,6 +47,14 @@
             margin-top: 20px; 
             font-size: 14px; 
             color: #888; 
+        }
+        #webcam {
+            display: none; 
+            width: 100%;
+            border-radius: 5px; 
+            margin-top: 15px; 
+            border: 1px solid #ccc;
+            background-color: #000;
         }
     </style>
 </head>
@@ -62,22 +70,22 @@
     
     <button onclick="startFaceScan()">Start Face Scan</button>
     
+    <video id="webcam" autoplay playsinline muted></video>
+    
     <div id="status">Connecting to local server...</div>
 </div>
 
 <script>
-    // Fetch shifts directly from your XAMPP local API
+    // Fetch shifts from the local XAMPP PHP API
     fetch('http://localhost/royal_ethnix_api/get_shifts.php')
         .then(response => response.json())
         .then(data => {
             const dropdown = document.getElementById('shiftDropdown');
             const status = document.getElementById('status');
             
-            // Clear the initial loading text
             dropdown.innerHTML = '<option value="">-- Select Your Shift --</option>';
             
             if (data.status === 'success') {
-                // Loop through the data and create dropdown options
                 data.data.forEach(shift => {
                     const option = document.createElement('option');
                     option.value = shift.id;
@@ -97,13 +105,33 @@
             document.getElementById('status').style.color = "red";
         });
 
+    // Activate the device camera
     function startFaceScan() {
         const shiftId = document.getElementById('shiftDropdown').value;
+        const status = document.getElementById('status');
+        const video = document.getElementById('webcam');
+        
         if(!shiftId) {
             alert("Please select your shift before scanning.");
             return;
         }
-        alert("Connecting to camera for Shift ID: " + shiftId + "...\n(This is where the face biometric integration will happen)");
+
+        video.style.display = "block";
+        status.textContent = "📷 Requesting camera access...";
+        status.style.color = "#111";
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                status.textContent = "🟢 Camera active. Position your face in the frame.";
+                status.style.color = "green";
+            })
+            .catch(err => {
+                console.error("Camera error:", err);
+                status.textContent = "🔴 Camera access denied or unavailable.";
+                status.style.color = "red";
+                video.style.display = "none";
+            });
     }
 </script>
 
