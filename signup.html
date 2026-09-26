@@ -48,101 +48,73 @@
     </div>
 
 <script>
-    const API_URL_OTP = 'https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/send_otp.php';
-    const API_URL_REGISTER = 'https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/register_user.php';
+let timerInterval;
 
-    // Temporary storage for user details before verification
-    let pendingUser = {};
+// Start the 2-minute countdown
+function startOtpTimer() {
+    let timeLeft = 120; // 2 minutes in seconds
+    const timerText = document.getElementById('timerText');
+    const countdownSpan = document.getElementById('countdown');
+    const resendBtn = document.getElementById('resendOtpBtn');
 
-    function switchView(viewId) {
-        document.getElementById('signup-section').classList.add('hidden');
-        document.getElementById('verify-section').classList.add('hidden');
-        document.getElementById(viewId).classList.remove('hidden');
-    }
-
-    async function handleSignup(event) {
-        event.preventDefault();
+    // Reset UI state
+    timerText.style.display = 'inline';
+    resendBtn.style.display = 'none';
+    clearInterval(timerInterval);
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
         
-        pendingUser = {
-            name: document.getElementById('signupName').value,
-            email: document.getElementById('signupEmail').value,
-            phone: document.getElementById('signupPhone').value,
-            password: document.getElementById('signupPassword').value
-        };
-
-        const submitBtn = event.target.querySelector('button');
-        submitBtn.textContent = "Sending OTP...";
-        submitBtn.disabled = true;
-
-        try {
-            const response = await fetch(API_URL_OTP, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': '1'
-                },
-                body: JSON.stringify({ email: pendingUser.email, phone: pendingUser.phone })
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                alert(data.message); 
-                switchView('verify-section');
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error('Signup Error:', error);
-            alert("Failed to connect to the server.");
-        } finally {
-            submitBtn.textContent = "Sign Up";
-            submitBtn.disabled = false;
+        countdownSpan.textContent = 
+            (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+            (seconds < 10 ? "0" + seconds : seconds);
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerText.style.display = 'none';
+            resendBtn.style.display = 'inline';
         }
-    }
+    }, 1000);
+}
 
-    async function handleVerify(event) {
-        event.preventDefault();
-        
-        const otpCode = document.getElementById('otpCode').value;
-        const submitBtn = event.target.querySelector('button');
-        
-        submitBtn.textContent = "Verifying & Registering...";
-        submitBtn.disabled = true;
+// Function to trigger OTP Sending
+function sendOtpToEmail() {
+    const email = document.getElementById('emailInput').value;
+    const phone = document.getElementById('phoneInput').value;
+    
+    // Change button text to show loading
+    document.getElementById('sendOtpButton').textContent = 'Sending OTP...';
 
-        try {
-            const response = await fetch(API_URL_REGISTER, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': '1'
-                },
-                body: JSON.stringify({ 
-                    otp: otpCode,
-                    name: pendingUser.name,
-                    email: pendingUser.email,
-                    phone: pendingUser.phone,
-                    password: pendingUser.password
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                alert(data.message);
-                pendingUser = {}; // Clear sensitive data
-                window.location.href = 'login.html'; 
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error('Verify Error:', error);
-            alert("Failed to connect to the server.");
-        } finally {
-            submitBtn.textContent = "Verify & Continue";
-            submitBtn.disabled = false;
+    fetch('send_otp.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, phone: phone })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            // Hide registration form, show OTP verification form
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('otpVerificationForm').style.display = 'block';
+            startOtpTimer(); // Start countdown exactly when form appears
+        } else {
+            alert(data.message);
         }
-    }
+        document.getElementById('sendOtpButton').textContent = 'Send OTP';
+    })
+    .catch(error => {
+        alert('Error sending OTP. Please check your connection.');
+        document.getElementById('sendOtpButton').textContent = 'Send OTP';
+    });
+}
+
+// Bind Resend button
+document.getElementById('resendOtpBtn').addEventListener('click', function() {
+    sendOtpToEmail(); 
+});
 </script>
 </body>
 </html>
