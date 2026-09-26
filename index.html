@@ -53,11 +53,7 @@
     }
 
     function fetchShifts() {
-        fetch('https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/get_shifts.php', {
-            headers: {
-                'ngrok-skip-browser-warning': '1'
-            }
-        })
+        fetch('http://theroyalethnix.kesug.com/royal_ethnix_api/get_shifts.php')
         .then(response => response.json())
         .then(data => {
             const dropdown = document.getElementById('shiftDropdown');
@@ -85,7 +81,6 @@
             document.getElementById('status').style.color = "red";
         });
     }
-
     function startFaceScan() {
         const shiftId = document.getElementById('shiftDropdown').value;
         const status = document.getElementById('status');
