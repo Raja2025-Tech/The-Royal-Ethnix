@@ -31,7 +31,8 @@
     </div>
 
 <script>
-    const API_URL = 'https://traffic-paper-starless.ngrok-free.dev/royal_ethnix_api/login.php';
+    // লাইভ InfinityFree API URL
+    const API_URL = 'http://theroyalethnix.kesug.com/royal_ethnix_api/login.php';
 
     async function handleLogin(event) {
         event.preventDefault();
@@ -47,8 +48,7 @@
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': '1' 
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ loginId, password })
             });
@@ -71,7 +71,7 @@
             }
         } catch (error) {
             console.error('Login Error:', error);
-            alert("Failed to connect to the authentication server. Ensure ngrok and XAMPP are running.");
+            alert("Failed to connect to the authentication server.");
         } finally {
             submitBtn.textContent = "Login";
             submitBtn.disabled = false;
