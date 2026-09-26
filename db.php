@@ -1,14 +1,14 @@
 <?php
 // db.php
 
-$host = '127.0.0.1';
-$db_name = 'royal_ethnix_attendance';
-$username = 'root'; // Default XAMPP username
-$password = ''; // Default XAMPP password is empty
+// InfinityFree MySQL Details
+$host = 'sql109.infinityfree.com'; // অথবা sql109.byetcluster.com
+$db_name = 'if0_42948406_theroyalethnix'; // আপনার লাইভ ডাটাবেসের নাম
+$username = 'if0_42948406'; // আপনার InfinityFree ইউজারনেম
+$password = 'আপনার_INFINITYFREE_পাসওয়ার্ড'; // আপনার vPanel/cPanel পাসওয়ার্ড
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
-    // Set PDO error mode to exception for easier debugging
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     die(json_encode([
