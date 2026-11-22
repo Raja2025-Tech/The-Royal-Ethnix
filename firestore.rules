@@ -1,0 +1,130 @@
+rules_version = '2';
+
+// Security rules for The Royal Ethnix TMS. They mirror src/services/userPermissions.js and
+// src/services/policies: each role can read and change only what the app allows it to.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------- helpers
+    function signedIn() {
+      return request.auth != null;
+    }
+    function me() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function active() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && me().active == true;
+    }
+    function role() {
+      return me().profile;
+    }
+    function is(roles) {
+      return active() && role() in roles;
+    }
+    function myKarigar() {
+      return me().get('karigarId', '');
+    }
+    // Fields the app updates on every save.
+    function onlyChanged(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(fields.concat(['ModifiedOn']));
+    }
+
+    // ---------------------------------------------------------------- first run
+    match /meta/setup {
+      allow read: if true;
+      allow create: if signedIn()
+        && !exists(/databases/$(database)/documents/meta/setup)
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.profile == 'Owner_c';
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------- logins
+    match /users/{uid} {
+      allow read: if active();
+      // The very first account becomes the owner; after that only the owner adds people.
+      allow create: if (signedIn() && request.auth.uid == uid
+                        && !exists(/databases/$(database)/documents/meta/setup)
+                        && request.resource.data.profile == 'Owner_c')
+                    || is(['Owner_c']);
+      allow update: if is(['Owner_c'])
+        || (is(['Manager_c']) && onlyChanged(['karigarId']));
+      allow delete: if is(['Owner_c']);
+    }
+
+    // ---------------------------------------------------------------- business data
+    match /customers_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow create: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow update: if is(['Owner_c', 'Staff_c']);
+      allow delete: if is(['Owner_c']);
+    }
+
+    match /orders_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c', 'CadMaster_c']);
+      allow create: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow update: if is(['Owner_c', 'Staff_c'])
+        || (is(['CadMaster_c']) && onlyChanged(['cad_pattern_c', 'pattern_date_c']));
+      allow delete: if is(['Owner_c']);
+    }
+
+    match /order_items_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c', 'CadMaster_c'])
+        || (is(['Karigar_c']) && myKarigar() in resource.data.karigar_ids);
+      allow create: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow update: if is(['Owner_c', 'Staff_c'])
+        || (is(['CadMaster_c']) && onlyChanged(['cad_c', 'cad_date_c']))
+        || (is(['Karigar_c']) && myKarigar() in resource.data.karigar_ids
+            && onlyChanged(['status_c', 'wage_c', 'wage2_c', 'wage3_c', 'karigar_note_c']));
+      allow delete: if is(['Owner_c']);
+    }
+
+    match /karigars_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c'])
+        || (is(['Karigar_c']) && request.auth.uid in resource.data.login_c);
+      allow create: if is(['Owner_c', 'Manager_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+
+    match /categories_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c', 'CadMaster_c']);
+      allow create: if is(['Owner_c', 'Manager_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+
+    match /karigar_payments_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c'])
+        || (is(['Karigar_c']) && resource.data.karigar_c.Id == myKarigar());
+      allow create: if is(['Owner_c', 'Manager_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+
+    // Counter staff never see karigar payments in the cashbook.
+    match /cashbook_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c'])
+        || (is(['Staff_c']) && resource.data.category_c != 'Karigar');
+      allow create: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+
+    match /audit_log_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c']);
+      allow create: if active();
+      allow update, delete: if false;
+    }
+
+    match /stock_items_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow create: if is(['Owner_c', 'Manager_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+
+    match /stock_moves_c/{id} {
+      allow read: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow create: if is(['Owner_c', 'Manager_c', 'Staff_c']);
+      allow update, delete: if is(['Owner_c']);
+    }
+  }
+}
