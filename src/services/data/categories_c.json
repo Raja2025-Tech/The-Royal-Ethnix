@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "_table": { "label": "Garment Category", "plural": "Garment Categories", "icon": "Shirt" },
+    "Name": { "type": "Text", "label": "Category Name", "required": true },
+    "kind_c": { "type": "Picklist", "label": "Wear Type", "values": "Top Wear,Bottom Wear,Accessory" },
+    "default_wage_c": { "type": "Decimal", "label": "Default Wage", "precision": 2 },
+    "notes_c": { "type": "MultilineText", "label": "Notes" }
+  },
+  "records": [
+    { "Id": "ca000000-0000-4000-8000-000000000001", "Name": "Sherwani", "kind_c": "Top Wear", "default_wage_c": 5000, "notes_c": "Full lining, canvas collar.", "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000002", "Name": "Indo-Western", "kind_c": "Top Wear", "default_wage_c": 3500, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000003", "Name": "Kurta", "kind_c": "Top Wear", "default_wage_c": 1100, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000004", "Name": "Shirt", "kind_c": "Top Wear", "default_wage_c": 800, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000005", "Name": "Jodhpuri/Bandhgala", "kind_c": "Top Wear", "default_wage_c": 3800, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000006", "Name": "Tuxedo", "kind_c": "Top Wear", "default_wage_c": 4200, "notes_c": "Satin lapel.", "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000007", "Name": "Suit/Blazer/Coat", "kind_c": "Top Wear", "default_wage_c": 3200, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000008", "Name": "Nehru Jacket/Waistcoat", "kind_c": "Top Wear", "default_wage_c": 1800, "notes_c": "Nehru Jacket, JJ and Waistcoat.", "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000009", "Name": "Elastic Pant Pajama", "kind_c": "Bottom Wear", "default_wage_c": 450, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000010", "Name": "Dori Pajama", "kind_c": "Bottom Wear", "default_wage_c": 450, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000011", "Name": "Formal Pant", "kind_c": "Bottom Wear", "default_wage_c": 900, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000012", "Name": "Patiala Pant", "kind_c": "Bottom Wear", "default_wage_c": 700, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000013", "Name": "SAFA", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": "Turban / safa.", "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000014", "Name": "DUPATTA", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000015", "Name": "MOJRI/JUTI", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": "Footwear. Note the size in design notes.", "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000016", "Name": "MAALA", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000017", "Name": "BROCH", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" },
+    { "Id": "ca000000-0000-4000-8000-000000000018", "Name": "BUTTON", "kind_c": "Accessory", "default_wage_c": 0, "notes_c": null, "Owner": { "Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish" }, "CreatedOn": "2026-09-01T09:00:00Z" }
+  ]
+}

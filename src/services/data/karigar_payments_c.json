@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "_table": { "label": "Karigar Payment", "plural": "Karigar Payments", "icon": "Wallet" },
+    "Name": { "type": "Text", "label": "Reference", "required": true },
+    "karigar_c": { "type": "Lookup", "label": "Karigar", "lookup": "karigars_c" },
+    "amount_c": { "type": "Decimal", "label": "Amount", "precision": 2 },
+    "type_c": { "type": "Picklist", "label": "Payment Type", "values": "Advance,Majuri,Bonus" },
+    "paid_on_c": { "type": "Date", "label": "Paid On" },
+    "note_c": { "type": "MultilineText", "label": "Note" },
+    "bill_c": { "type": "Text", "label": "Bill Number" }
+  },
+  "records": []
+}

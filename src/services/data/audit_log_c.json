@@ -1,0 +1,14 @@
+{
+  "_meta": {
+    "_table": { "label": "Change Log", "plural": "Change History", "icon": "History" },
+    "Name": { "type": "Text", "label": "Record", "required": true },
+    "entity_c": { "type": "Text", "label": "Entity" },
+    "record_c": { "type": "Text", "label": "Record Id" },
+    "bill_c": { "type": "Text", "label": "Bill Number" },
+    "action_c": { "type": "Picklist", "label": "Action", "values": "Create,Update,Delete" },
+    "changes_c": { "type": "MultilineText", "label": "Changes" },
+    "by_c": { "type": "Text", "label": "Changed By" },
+    "role_c": { "type": "Text", "label": "Role" }
+  },
+  "records": []
+}

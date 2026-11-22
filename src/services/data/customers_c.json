@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "_table": { "label": "Customer", "plural": "Customers", "icon": "Users" },
+    "Name": { "type": "Text", "label": "Customer Name", "required": true },
+    "phone_c": { "type": "Text", "label": "Phone" },
+    "source_c": { "type": "Picklist", "label": "Source", "values": "Walk-in,Referral,Instagram,Website,Other" },
+    "birthday_c": { "type": "Date", "label": "Birthday" },
+    "address_c": { "type": "Text", "label": "Address" },
+    "notes_c": { "type": "MultilineText", "label": "Notes" }
+  },
+  "records": []
+}

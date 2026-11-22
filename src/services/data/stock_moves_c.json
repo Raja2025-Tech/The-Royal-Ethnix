@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "_table": { "label": "Stock Movement", "plural": "Stock Movements", "icon": "ArrowLeftRight" },
+    "Name": { "type": "Text", "label": "Reference", "required": true },
+    "item_c": { "type": "Lookup", "label": "Item", "lookup": "stock_items_c" },
+    "move_c": { "type": "Picklist", "label": "Movement", "values": "In,Out,To Factory,To Shop" },
+    "location_c": { "type": "Picklist", "label": "Location", "values": "Shop,Factory" },
+    "qty_c": { "type": "Decimal", "label": "Quantity", "precision": 2 },
+    "move_date_c": { "type": "Date", "label": "Date" },
+    "bill_c": { "type": "Text", "label": "Bill Number" },
+    "karigar_c": { "type": "Lookup", "label": "Karigar", "lookup": "karigars_c" },
+    "note_c": { "type": "MultilineText", "label": "Note" }
+  },
+  "records": []
+}

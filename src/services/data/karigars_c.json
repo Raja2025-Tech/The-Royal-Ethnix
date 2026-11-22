@@ -1,0 +1,6 @@
+{
+  "_meta": {"_table": {"label": "Karigar", "plural": "Karigars", "icon": "Scissors"}, "Name": {"type": "Text", "label": "Karigar Name", "required": true}, "phone_c": {"type": "Text", "label": "Phone"}, "specialty_c": {"type": "Picklist", "label": "Specialty", "values": "Sher,Kurta,Indo,Suit,Pant,Hand,Juti,Safa,All"}, "joined_c": {"type": "Date", "label": "Joined On"}, "active_c": {"type": "Boolean", "label": "Active"}, "notes_c": {"type": "MultilineText", "label": "Notes"}, "login_c": {"type": "People", "label": "Login Account", "supportMultipleValues": false}},
+  "records": [
+    {"Id": "b1000000-0000-4000-8000-000000000001", "Name": "Mohammad Rafique", "phone_c": "9830455120", "specialty_c": "All", "joined_c": "2026-11-01", "active_c": true, "notes_c": "Linked to karigar@demo.app for testing the karigar login.", "Owner": {"Id": "a41c9d27-5e8f-4b06-9c3a-d7f218e64b90", "Name": "Subhasish"}, "CreatedOn": "2026-11-01T09:00:00Z", "login_c": [{"Id": "f7000000-0000-4000-8000-000000000001", "User": {"Id": "c63e1f49-7a01-4d28-9e5c-f93b4a86db12", "Name": "karigar@demo.app"}}]}
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "_meta": {"_table": {"label": "Cashbook Entry", "plural": "Cashbook", "icon": "BookOpen"}, "Name": {"type": "Text", "label": "Particulars", "required": true}, "kind_c": {"type": "Picklist", "label": "Cash In or Out", "values": "In,Out"}, "category_c": {"type": "Text", "label": "Head"}, "amount_c": {"type": "Decimal", "label": "Amount", "precision": 2}, "entry_date_c": {"type": "Date", "label": "Date"}, "note_c": {"type": "MultilineText", "label": "Note"}},
+  "records": []
+}

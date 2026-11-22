@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "_table": { "label": "Stock Item", "plural": "Stock Items", "icon": "Package" },
+    "Name": { "type": "Text", "label": "Item", "required": true },
+    "unit_c": { "type": "Picklist", "label": "Unit", "values": "Meter,Piece,Roll,Pair,Set" },
+    "min_qty_c": { "type": "Decimal", "label": "Low Stock Level", "precision": 2 },
+    "notes_c": { "type": "MultilineText", "label": "Notes" }
+  },
+  "records": []
+}
